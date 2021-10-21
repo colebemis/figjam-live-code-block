@@ -24,7 +24,7 @@ _TODO_
    ```shell
    npm install
    ```
-1. Build the widget
+1. Build the project
 
    ```shell
    npm run build
