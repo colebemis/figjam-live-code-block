@@ -24,6 +24,13 @@ _TODO_
    ```shell
    npm install
    ```
+1. Build the project
+
+   ```shell
+   npm run build
+   # or
+   npm run build:watch
+   ```
 
 1. Open the [Figma desktop app](https://www.figma.com/downloads/)
 
