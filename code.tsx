@@ -116,6 +116,23 @@ function App() {
         spread: 2,
       }}
     >
+      {/* <AutoLayout
+        direction="vertical"
+        horizontalAlignItems="start"
+        verticalAlignItems="start"
+        width="fill-parent"
+        spacing={8}
+        padding={{ vertical: 8, horizontal: 16 }}
+        fill={colors.coolGray[900]}
+      >
+        <Text
+          fontFamily="JetBrains Mono"
+          fontSize={14}
+          fill={colors.coolGray[400]}
+        >
+          name
+        </Text>
+      </AutoLayout> */}
       <AutoLayout
         padding={16}
         spacing={4}
