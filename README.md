@@ -31,4 +31,4 @@ _TODO_
 
 1. Select `/path/to/figjam-javascript-repl/manifest.json`
 
-1. Insert the widget by selecting `Menu > Widgets > Developement > JavaScript REPL` or search for `JavaScript REPL` in the quick actions bar (`⌘ /`)
+1. Add the widget to the canvas by selecting `Menu > Widgets > Developement > JavaScript REPL` or search for `JavaScript REPL` in the quick actions bar (`⌘ /`)
