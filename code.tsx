@@ -34,7 +34,8 @@ function getInputs(widgetId: string) {
       const inputNode = figma.getNodeById(node.connectorStart.endpointNodeId);
 
       if (inputNode.type === "WIDGET") {
-        inputs[node.text.characters] = inputNode.widgetSyncedState.value;
+        const fn = new Function(`return ${inputNode.widgetSyncedState.value}`);
+        inputs[node.text.characters] = fn();
       }
     }
   });
@@ -45,8 +46,9 @@ function getInputs(widgetId: string) {
 function App() {
   const widgetId = useWidgetId();
 
-  const [code, setCode] = useSyncedState("code", "1 + 1");
-  const [value, setValue] = useSyncedState<any>("value", 2);
+  // TODO: track value type
+  const [code, setCode] = useSyncedState<string>("code", "1 + 1");
+  const [value, setValue] = useSyncedState<string>("value", "2");
 
   usePropertyMenu(
     [
@@ -82,7 +84,15 @@ function App() {
 
       const inputs = getInputs(widgetId);
       const value = evaluateExpression(inputs, code);
-      setValue(value);
+      switch (typeof value) {
+        case "function":
+          setValue(value.toString());
+          break;
+
+        default:
+          setValue(JSON.stringify(value, null, 2));
+          break;
+      }
     };
   });
 
@@ -115,7 +125,7 @@ function App() {
           return line ? (
             <Text
               key={index}
-              fontFamily="Source Code Pro"
+              fontFamily="JetBrains Mono"
               fill={colors.coolGray[200]}
             >
               {line}
@@ -131,8 +141,8 @@ function App() {
         width="fill-parent"
         padding={16}
       >
-        <Text fontFamily="Source Code Pro" fill={colors.coolGray[200]}>
-          {JSON.stringify(value, null, 2)}
+        <Text fontFamily="JetBrains Mono" fill={colors.coolGray[200]}>
+          {value}
         </Text>
       </AutoLayout>
     </AutoLayout>
