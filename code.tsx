@@ -49,6 +49,7 @@ function App() {
   // TODO: track value type
   const [code, setCode] = useSyncedState<string>("code", "1 + 1");
   const [value, setValue] = useSyncedState<string>("value", "2");
+  const [type, setType] = useSyncedState<string>("type", "number");
 
   usePropertyMenu(
     [
@@ -84,7 +85,9 @@ function App() {
 
       const inputs = getInputs(widgetId);
       const value = evaluateExpression(inputs, code);
-      switch (typeof value) {
+      const type = typeof value;
+      setType(type);
+      switch (type) {
         case "function":
           setValue(value.toString());
           break;
@@ -139,10 +142,18 @@ function App() {
         horizontalAlignItems="start"
         verticalAlignItems="start"
         width="fill-parent"
+        spacing={8}
         padding={16}
       >
         <Text fontFamily="JetBrains Mono" fill={colors.teal[400]}>
           {value}
+        </Text>
+        <Text
+          fontFamily="JetBrains Mono"
+          fontSize={14}
+          fill={colors.coolGray[400]}
+        >
+          {type}
         </Text>
       </AutoLayout>
     </AutoLayout>
