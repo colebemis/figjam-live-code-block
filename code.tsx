@@ -44,8 +44,8 @@ function getInputs(widgetId: string) {
 function App() {
   const widgetId = useWidgetId();
 
-  const [code, setCode] = useSyncedState("code", "'hello' + ' world'");
-  const [value, setValue] = useSyncedState<any>("value", "hello world");
+  const [code, setCode] = useSyncedState("code", "1 + 1");
+  const [value, setValue] = useSyncedState<any>("value", 2);
 
   usePropertyMenu(
     [
@@ -92,7 +92,7 @@ function App() {
       verticalAlignItems="center"
       width={400}
       height="hug-contents"
-      fill="#222"
+      fill="#1E293B"
       cornerRadius={12}
       effect={{
         type: "drop-shadow",
@@ -112,13 +112,13 @@ function App() {
       >
         {code.split("\n").map((line, index) => {
           return line ? (
-            <Text key={index} fontFamily="Source Code Pro" fill="#fff">
+            <Text key={index} fontFamily="Source Code Pro" fill="#E2E8F0">
               {line}
             </Text>
           ) : null;
         })}
       </AutoLayout>
-      <Frame width="fill-parent" height={1} fill="#333" />
+      <Frame width="fill-parent" height={1} fill="#334155" />
       <AutoLayout
         direction="vertical"
         horizontalAlignItems="start"
@@ -126,7 +126,7 @@ function App() {
         width="fill-parent"
         padding={16}
       >
-        <Text fontFamily="Source Code Pro" fill="#fff">
+        <Text fontFamily="Source Code Pro" fill="#E2E8F0">
           {JSON.stringify(value, null, 2)}
         </Text>
       </AutoLayout>
