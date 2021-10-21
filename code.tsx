@@ -1,6 +1,7 @@
 const { widget } = figma;
 const {
   AutoLayout,
+  Frame,
   Text,
   useSyncedState,
   usePropertyMenu,
@@ -43,8 +44,8 @@ function getInputs(widgetId: string) {
 function App() {
   const widgetId = useWidgetId();
 
-  const [code, setCode] = useSyncedState("code", "Hello\nWidgets");
-  const [value, setValue] = useSyncedState<any>("value", null);
+  const [code, setCode] = useSyncedState("code", "'hello' + ' world'");
+  const [value, setValue] = useSyncedState<any>("value", "hello world");
 
   usePropertyMenu(
     [
@@ -86,13 +87,13 @@ function App() {
 
   return (
     <AutoLayout
-      direction="horizontal"
+      direction="vertical"
       horizontalAlignItems="center"
       verticalAlignItems="center"
+      width={400}
       height="hug-contents"
-      padding={8}
-      fill="#FFFFFF"
-      spacing={12}
+      fill="#222"
+      cornerRadius={12}
       effect={{
         type: "drop-shadow",
         color: { r: 0, g: 0, b: 0, a: 0.2 },
@@ -102,26 +103,32 @@ function App() {
       }}
     >
       <AutoLayout
+        padding={16}
+        spacing={4}
         direction="vertical"
         horizontalAlignItems="start"
         verticalAlignItems="start"
-        width={200}
-        spacing={16}
+        width="fill-parent"
       >
         {code.split("\n").map((line, index) => {
           return line ? (
-            <Text
-              key={index}
-              fontSize={12}
-              horizontalAlignText="left"
-              width="fill-parent"
-              fontFamily="Roboto Mono"
-            >
+            <Text key={index} fontFamily="Source Code Pro" fill="#fff">
               {line}
             </Text>
           ) : null;
         })}
-        <Text fontSize={12}>{JSON.stringify(value, null, 2)}</Text>
+      </AutoLayout>
+      <Frame width="fill-parent" height={1} fill="#333" />
+      <AutoLayout
+        direction="vertical"
+        horizontalAlignItems="start"
+        verticalAlignItems="start"
+        width="fill-parent"
+        padding={16}
+      >
+        <Text fontFamily="Source Code Pro" fill="#fff">
+          {JSON.stringify(value, null, 2)}
+        </Text>
       </AutoLayout>
     </AutoLayout>
   );
