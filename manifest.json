@@ -1,5 +1,6 @@
 {
   "name": "JavaScript REPL",
+  "id": "1",
   "api": "1.0.0",
   "editorType": ["figjam"],
   "permissions": [],
