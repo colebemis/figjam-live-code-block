@@ -141,7 +141,7 @@ function App() {
         width="fill-parent"
         padding={16}
       >
-        <Text fontFamily="JetBrains Mono" fill={colors.coolGray[200]}>
+        <Text fontFamily="JetBrains Mono" fill={colors.teal[400]}>
           {value}
         </Text>
       </AutoLayout>
