@@ -1,3 +1,4 @@
+import colors from "tailwindcss/colors";
 const { widget } = figma;
 const {
   AutoLayout,
@@ -92,7 +93,7 @@ function App() {
       verticalAlignItems="center"
       width={400}
       height="hug-contents"
-      fill="#1E293B"
+      fill={colors.coolGray[800]}
       cornerRadius={12}
       effect={{
         type: "drop-shadow",
@@ -112,13 +113,17 @@ function App() {
       >
         {code.split("\n").map((line, index) => {
           return line ? (
-            <Text key={index} fontFamily="Source Code Pro" fill="#E2E8F0">
+            <Text
+              key={index}
+              fontFamily="Source Code Pro"
+              fill={colors.coolGray[200]}
+            >
               {line}
             </Text>
           ) : null;
         })}
       </AutoLayout>
-      <Frame width="fill-parent" height={1} fill="#334155" />
+      <Frame width="fill-parent" height={1} fill={colors.coolGray[700]} />
       <AutoLayout
         direction="vertical"
         horizontalAlignItems="start"
@@ -126,7 +131,7 @@ function App() {
         width="fill-parent"
         padding={16}
       >
-        <Text fontFamily="Source Code Pro" fill="#E2E8F0">
+        <Text fontFamily="Source Code Pro" fill={colors.coolGray[200]}>
           {JSON.stringify(value, null, 2)}
         </Text>
       </AutoLayout>

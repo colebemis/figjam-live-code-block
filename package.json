@@ -4,7 +4,7 @@
   "description": "JavaScript REPL for FigJam",
   "scripts": {
     "test": "tsc --noEmit",
-    "build": "esbuild code.tsx --outfile=build/code.js",
+    "build": "esbuild code.tsx --outfile=build/code.js --bundle",
     "build:watch": "npm run build -- --watch"
   },
   "author": "Cole Bemis",
@@ -12,7 +12,11 @@
   "devDependencies": {
     "@figma/plugin-typings": "^1.37.0",
     "@figma/widget-typings": "^1.0.1",
+    "@types/tailwindcss": "^2.2.1",
     "esbuild": "^0.13.8",
     "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "tailwindcss": "^2.2.17"
   }
 }
