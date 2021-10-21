@@ -4,14 +4,15 @@
   "description": "JavaScript REPL for FigJam",
   "scripts": {
     "test": "tsc --noEmit",
-    "build": "tsc",
-    "build:watch": "tsc --watch"
+    "build": "esbuild code.tsx --outfile=build/code.js",
+    "build:watch": "npm run build -- --watch"
   },
   "author": "Cole Bemis",
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^4.3.5",
     "@figma/plugin-typings": "^1.37.0",
-    "@figma/widget-typings": "^1.0.1"
+    "@figma/widget-typings": "^1.0.1",
+    "esbuild": "^0.13.8",
+    "typescript": "^4.3.5"
   }
 }
