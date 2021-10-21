@@ -1,0 +1,9 @@
+{
+  "name": "JavaScript REPL",
+  "api": "1.0.0",
+  "editorType": ["figjam"],
+  "permissions": [],
+  "containsWidget": true,
+  "main": "build/code.js",
+  "widgetApi": "1.0.0"
+}
