@@ -9,6 +9,7 @@ const {
   usePropertyMenu,
   useEffect,
   useWidgetId,
+  waitForTask,
 } = widget;
 
 const initialState = {
@@ -25,8 +26,8 @@ function App() {
   const [type, setType] = useSyncedState<ValueType>("type", initialState.type);
   const [error, setError] = useSyncedState<string>("error", initialState.error);
 
-  function run(code: string) {
-    const result = evaluateWidget(widgetId, code);
+  async function run(code: string) {
+    const result = await evaluateWidget(widgetId, code);
 
     setError(result.error);
 
@@ -64,7 +65,7 @@ function App() {
           return new Promise<void>(() => {});
 
         case "run":
-          run(code);
+          waitForTask(run(code));
           return;
       }
     }
@@ -76,7 +77,7 @@ function App() {
       setCode(code);
 
       // TODO: debounce this function call to avoid flashing errors as users type
-      run(code);
+      waitForTask(run(code));
     };
   });
 

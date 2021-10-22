@@ -20,16 +20,14 @@ export type EvaluateWidgetReturnValue =
       error: string;
     };
 
-export function evaluateWidget(
+export async function evaluateWidget(
   widgetId: string,
   code: string
-): EvaluateWidgetReturnValue {
+): Promise<EvaluateWidgetReturnValue> {
   try {
-    const inputVariables = getInputVariables(widgetId);
+    const inputVariables = await getInputVariables(widgetId);
 
-    console.log(code);
-    const value = evaluate(code, inputVariables);
-    console.log(value);
+    const value = await evaluate(code, inputVariables);
 
     return { value: valueToString(value), type: typeof value, error: "" };
   } catch (error) {
@@ -41,49 +39,49 @@ export function evaluateWidget(
   }
 }
 
-function getInputVariables(widgetId: string): Record<string, any> {
+async function getInputVariables(widgetId: string) {
   const inputVariables: Record<string, any> = {};
 
   // Search all nodes in the document
-  figma.currentPage.children.forEach(node => {
+  for (const node of figma.currentPage.children) {
     // Ignore nodes that aren't connectors
-    if (node.type !== "CONNECTOR") return;
+    if (node.type !== "CONNECTOR") continue;
 
     // Ignore connectors that don't end at a node
-    if (!("endpointNodeId" in node.connectorEnd)) return;
+    if (!("endpointNodeId" in node.connectorEnd)) continue;
 
     // Ignore connectors that don'e end at the current widget
-    if (node.connectorEnd.endpointNodeId !== widgetId) return;
+    if (node.connectorEnd.endpointNodeId !== widgetId) continue;
 
     // Ignore connectors that don't start at a node
-    if (!("endpointNodeId" in node.connectorStart)) return;
+    if (!("endpointNodeId" in node.connectorStart)) continue;
 
     const startNode = figma.getNodeById(node.connectorStart.endpointNodeId);
 
     // Ignore connectors that don't start at a widget
-    if (startNode?.type !== "WIDGET") return;
+    if (startNode?.type !== "WIDGET") continue;
 
     // Ignore connectors that don't start at a widget with a value
-    if (typeof startNode.widgetSyncedState.value === "undefined") return;
+    if (typeof startNode.widgetSyncedState.value === "undefined") continue;
 
     // TODO: Check for errors on start node
 
     const variableName = node.text.characters;
 
-    const value = evaluate(startNode.widgetSyncedState.value);
+    const value = await evaluate(startNode.widgetSyncedState.value);
 
     // Don't store variables without a name
-    if (!variableName) return;
+    if (!variableName) continue;
 
     inputVariables[variableName] = value;
-  });
+  }
 
   return inputVariables;
 }
 
-function evaluate(code: string, scope: Record<string, any> = {}) {
+async function evaluate(code: string, scope: Record<string, any> = {}) {
   const fn = new Function(...Object.keys(scope), `return ${code}`);
-  return fn(...Object.values(scope));
+  return await fn(...Object.values(scope));
 }
 
 function valueToString(value: any): string {
