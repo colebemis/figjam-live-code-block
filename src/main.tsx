@@ -1,5 +1,4 @@
 import colors from "tailwindcss/colors";
-import { evaluateWidget, ValueType } from "./evaluate-widget";
 const { widget } = figma;
 const {
   AutoLayout,
@@ -12,10 +11,20 @@ const {
   waitForTask,
 } = widget;
 
+export type ValueType =
+  | "string"
+  | "number"
+  | "bigint"
+  | "boolean"
+  | "symbol"
+  | "undefined"
+  | "object"
+  | "function";
+
 const initialState = {
   code: "1 + 1",
   value: "2",
-  type: "number",
+  valueType: "number",
   error: "",
 } as const;
 
@@ -23,16 +32,42 @@ function App() {
   const widgetId = useWidgetId();
   const [code, setCode] = useSyncedState<string>("code", initialState.code);
   const [value, setValue] = useSyncedState<string>("value", initialState.value);
-  const [type, setType] = useSyncedState<ValueType>("type", initialState.type);
+  const [valueType, setValueType] = useSyncedState<ValueType>(
+    "valueType",
+    initialState.valueType
+  );
   const [error, setError] = useSyncedState<string>("error", initialState.error);
 
-  async function run(code: string) {
-    const result = await evaluateWidget(widgetId, code);
+  // The `editor` UI (src/editor.html) must be running when the `run` function
+  // is called because we evaluate code in the UI environment.
+  // This enables us to evaluate code with network requests.
+  // Reference: https://www.figma.com/widget-docs/making-network-requests/
+  function run(code: string) {
+    return new Promise(resolve => {
+      const inputs = getInputs(widgetId);
 
-    setError(result.error);
+      // Send code to the UI to evaluate
+      figma.ui.postMessage({ type: "evaluate", code, inputs });
 
-    if (result.value) setValue(result.value);
-    if (result.type) setType(result.type);
+      // Wait for the UI to send back evaluated code
+      figma.ui.on("message", handleMessage);
+
+      function handleMessage(message: any) {
+        if (message.type === "codeEvaluated") {
+          const { value, valueType, error } = message;
+
+          // Update state
+          setError(error);
+          if (value) setValue(value);
+          if (valueType) setValueType(valueType);
+
+          // Clean up
+          figma.ui.off("message", handleMessage);
+
+          resolve(null);
+        }
+      }
+    });
   }
 
   usePropertyMenu(
@@ -58,6 +93,7 @@ function App() {
           return new Promise<void>(() => {});
 
         case "run":
+          figma.showUI(__uiFiles__["editor"], { visible: false });
           waitForTask(run(code));
           return;
       }
@@ -66,11 +102,15 @@ function App() {
 
   useEffect(() => {
     figma.ui.onmessage = message => {
-      const code = message;
-      setCode(code);
+      switch (message.type) {
+        case "codeChanged":
+          const { code } = message;
+          setCode(code);
 
-      // TODO: debounce this function call to avoid flashing errors as users type
-      waitForTask(run(code));
+          // TODO: debounce this function call to avoid flashing errors as users type
+          run(code);
+          break;
+      }
     };
   });
 
@@ -151,10 +191,51 @@ function App() {
           fontSize={14}
           fill={colors.coolGray[400]}
         >
-          {error ? "error" : type}
+          {error ? "error" : valueType}
         </Text>
       </AutoLayout>
     </AutoLayout>
   );
 }
+
 widget.register(App);
+
+function getInputs(widgetId: string) {
+  const inputs: Record<string, any> = {};
+
+  // Search all nodes in the document
+  for (const node of figma.currentPage.children) {
+    // Ignore nodes that aren't connectors
+    if (node.type !== "CONNECTOR") continue;
+
+    // Ignore connectors that don't end at a node
+    if (!("endpointNodeId" in node.connectorEnd)) continue;
+
+    // Ignore connectors that don'e end at the current widget
+    if (node.connectorEnd.endpointNodeId !== widgetId) continue;
+
+    // Ignore connectors that don't start at a node
+    if (!("endpointNodeId" in node.connectorStart)) continue;
+
+    const startNode = figma.getNodeById(node.connectorStart.endpointNodeId);
+
+    // Ignore connectors that don't start at a widget
+    if (startNode?.type !== "WIDGET") continue;
+
+    // Ignore connectors that don't start at a widget with a value
+    if (typeof startNode.widgetSyncedState.value === "undefined") continue;
+
+    // TODO: Check for errors on start node
+
+    const variableName = node.text.characters;
+
+    const value = new Function(`return ${startNode.widgetSyncedState.value}`)();
+
+    // Don't store variables without a name
+    if (!variableName) continue;
+
+    inputs[variableName] = value;
+  }
+
+  return inputs;
+}
