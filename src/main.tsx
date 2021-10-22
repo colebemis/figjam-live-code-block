@@ -26,10 +26,13 @@ const initialState = {
   value: "2",
   valueType: "number",
   error: "",
+  isExpanded: false,
 } as const;
 
 function App() {
   const widgetId = useWidgetId();
+
+  // Initialize state
   const [code, setCode] = useSyncedState<string>("code", initialState.code);
   const [value, setValue] = useSyncedState<string>("value", initialState.value);
   const [valueType, setValueType] = useSyncedState<ValueType>(
@@ -37,6 +40,10 @@ function App() {
     initialState.valueType
   );
   const [error, setError] = useSyncedState<string>("error", initialState.error);
+  const [isExpanded, setIsExpanded] = useSyncedState<boolean>(
+    "isExpanded",
+    initialState.isExpanded
+  );
 
   // The `editor` UI (src/editor.html) must be running when the `run` function
   // is called because we evaluate code in the UI environment.
@@ -182,9 +189,56 @@ function App() {
             {error}
           </Text>
         ) : (
-          <Text fontFamily="JetBrains Mono" fill={colors.teal[400]}>
-            {value}
-          </Text>
+          <AutoLayout
+            direction="vertical"
+            horizontalAlignItems="start"
+            verticalAlignItems="start"
+            width="fill-parent"
+            spacing={8}
+          >
+            {value.split("\n").length > 10 ? (
+              <Text
+                fontFamily="JetBrains Mono"
+                fontSize={14}
+                fill={colors.teal[400]}
+                textDecoration="underline"
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
+                {isExpanded ? "Show less" : "Show more"}
+              </Text>
+            ) : null}
+            <AutoLayout
+              spacing={4}
+              direction="vertical"
+              horizontalAlignItems="start"
+              verticalAlignItems="start"
+              width="fill-parent"
+            >
+              {value
+                .split("\n")
+                .filter((_, index) => isExpanded || index < 10)
+                .map((line, index) => {
+                  return line ? (
+                    <Text
+                      key={index}
+                      fontFamily="JetBrains Mono"
+                      fill={colors.teal[400]}
+                    >
+                      {line}
+                    </Text>
+                  ) : null;
+                })}
+              {!isExpanded && value.split("\n").length > 10 ? (
+                <Text
+                  fontFamily="JetBrains Mono"
+                  fill={colors.teal[400]}
+                  onClick={() => setIsExpanded(!isExpanded)}
+                >
+                  ...
+                </Text>
+              ) : null}
+            </AutoLayout>
+          </AutoLayout>
         )}
         <Text
           fontFamily="JetBrains Mono"
