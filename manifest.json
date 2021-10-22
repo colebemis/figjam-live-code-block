@@ -8,6 +8,6 @@
   "containsWidget": true,
   "main": "build/main.js",
   "ui": {
-    "editor": "src/editor.html"
+    "editor": "build/editor.html"
   }
 }
