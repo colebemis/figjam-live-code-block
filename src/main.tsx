@@ -1,5 +1,5 @@
 import colors from "tailwindcss/colors";
-import { evaluate, ValueType } from "./evaluate";
+import { evaluateWidget, ValueType } from "./evaluate-widget";
 const { widget } = figma;
 const {
   AutoLayout,
@@ -11,43 +11,11 @@ const {
   useWidgetId,
 } = widget;
 
-// function evaluateExpression(scope: Record<string, any>, code: string) {
-//   try {
-//     const fn = new Function(...Object.keys(scope), `return ${code}`);
-//     return fn(...Object.values(scope));
-//   } catch (error) {
-//     return null;
-//   }
-// }
-
-// function getInputs(widgetId: string) {
-//   const inputs = {};
-
-//   // TODO: clean this up
-//   figma.currentPage.children.forEach(node => {
-//     if (
-//       node.type === "CONNECTOR" &&
-//       "endpointNodeId" in node.connectorEnd &&
-//       node.connectorEnd.endpointNodeId === widgetId &&
-//       "endpointNodeId" in node.connectorStart &&
-//       node.text.characters
-//     ) {
-//       const inputNode = figma.getNodeById(node.connectorStart.endpointNodeId);
-
-//       if (inputNode.type === "WIDGET") {
-//         const fn = new Function(`return ${inputNode.widgetSyncedState.value}`);
-//         inputs[node.text.characters] = fn();
-//       }
-//     }
-//   });
-
-//   return inputs;
-// }
-
 const initialState = {
   code: "1 + 1",
   value: "2",
   type: "number",
+  error: "",
 } as const;
 
 function App() {
@@ -55,9 +23,12 @@ function App() {
   const [code, setCode] = useSyncedState<string>("code", initialState.code);
   const [value, setValue] = useSyncedState<string>("value", initialState.value);
   const [type, setType] = useSyncedState<ValueType>("type", initialState.type);
+  const [error, setError] = useSyncedState<string>("error", initialState.error);
 
   function run(code: string) {
-    const result = evaluate(widgetId, code);
+    const result = evaluateWidget(widgetId, code);
+
+    setError(result.error);
 
     if (result.value) setValue(result.value);
     if (result.type) setType(result.type);
@@ -103,21 +74,9 @@ function App() {
     figma.ui.onmessage = message => {
       const code = message;
       setCode(code);
+
+      // TODO: debounce this function call to avoid flashing errors as users type
       run(code);
-
-      // const inputs = getInputs(widgetId);
-      // const value = evaluateExpression(inputs, code);
-      // const type = typeof value;
-      // setType(type);
-      // switch (type) {
-      //   case "function":
-      //     setValue(value.toString());
-      //     break;
-
-      //   default:
-      //     setValue(JSON.stringify(value, null, 2));
-      //     break;
-      // }
     };
   });
 
@@ -184,15 +143,21 @@ function App() {
         spacing={8}
         padding={16}
       >
-        <Text fontFamily="JetBrains Mono" fill={colors.teal[400]}>
-          {value}
-        </Text>
+        {error ? (
+          <Text fontFamily="JetBrains Mono" fill={colors.red[400]}>
+            {error}
+          </Text>
+        ) : (
+          <Text fontFamily="JetBrains Mono" fill={colors.teal[400]}>
+            {value}
+          </Text>
+        )}
         <Text
           fontFamily="JetBrains Mono"
           fontSize={14}
           fill={colors.coolGray[400]}
         >
-          {type}
+          {error ? "error" : type}
         </Text>
       </AutoLayout>
     </AutoLayout>
