@@ -1,0 +1,19 @@
+<textarea id="editor"></textarea>
+
+<script>
+  const editor = document.getElementById("editor");
+
+  editor.addEventListener("input", event => {
+    parent.postMessage({ pluginMessage: event.target.value }, "*");
+  });
+
+  // TODO: Improve type safety of message passing
+  window.onmessage = async event => {
+    const message = event.data.pluginMessage;
+    switch (message.type) {
+      case "initialize":
+        editor.value = message.code;
+        break;
+    }
+  };
+</script>

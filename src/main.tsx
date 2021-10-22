@@ -51,17 +51,10 @@ function App() {
     ({ propertyName }) => {
       switch (propertyName) {
         case "edit":
-          // TODO: move this into a separate file
-          figma.showUI(`
-        <pre id="editor" contenteditable=true>${code}</pre>
-        <script>
-          const editor = document.getElementById("editor");
-          editor.addEventListener("input", () => {
-            parent.postMessage({ pluginMessage: editor.innerText }, '*');
-          })
-          editor.focus();
-        </script>
-      `);
+          figma.showUI(__uiFiles__["editor"]);
+          figma.ui.postMessage({ type: "initialize", code });
+
+          // Keep UI open
           return new Promise<void>(() => {});
 
         case "run":

@@ -2,9 +2,12 @@
   "name": "JavaScript REPL",
   "id": "1",
   "api": "1.0.0",
+  "widgetApi": "1.0.0",
   "editorType": ["figjam"],
   "permissions": [],
   "containsWidget": true,
   "main": "build/main.js",
-  "widgetApi": "1.0.0"
+  "ui": {
+    "editor": "src/editor.html"
+  }
 }
