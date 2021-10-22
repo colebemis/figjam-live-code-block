@@ -1,4 +1,5 @@
 import colors from "tailwindcss/colors";
+import { evaluate, ValueType } from "./evaluate";
 const { widget } = figma;
 const {
   AutoLayout,
@@ -10,52 +11,68 @@ const {
   useWidgetId,
 } = widget;
 
-function evaluateExpression(scope: Record<string, any>, code: string) {
-  try {
-    const fn = new Function(...Object.keys(scope), `return ${code}`);
-    return fn(...Object.values(scope));
-  } catch (error) {
-    return null;
-  }
-}
+// function evaluateExpression(scope: Record<string, any>, code: string) {
+//   try {
+//     const fn = new Function(...Object.keys(scope), `return ${code}`);
+//     return fn(...Object.values(scope));
+//   } catch (error) {
+//     return null;
+//   }
+// }
 
-function getInputs(widgetId: string) {
-  const inputs = {};
+// function getInputs(widgetId: string) {
+//   const inputs = {};
 
-  // TODO: clean this up
-  figma.currentPage.children.forEach(node => {
-    if (
-      node.type === "CONNECTOR" &&
-      "endpointNodeId" in node.connectorEnd &&
-      node.connectorEnd.endpointNodeId === widgetId &&
-      "endpointNodeId" in node.connectorStart &&
-      node.text.characters
-    ) {
-      const inputNode = figma.getNodeById(node.connectorStart.endpointNodeId);
+//   // TODO: clean this up
+//   figma.currentPage.children.forEach(node => {
+//     if (
+//       node.type === "CONNECTOR" &&
+//       "endpointNodeId" in node.connectorEnd &&
+//       node.connectorEnd.endpointNodeId === widgetId &&
+//       "endpointNodeId" in node.connectorStart &&
+//       node.text.characters
+//     ) {
+//       const inputNode = figma.getNodeById(node.connectorStart.endpointNodeId);
 
-      if (inputNode.type === "WIDGET") {
-        const fn = new Function(`return ${inputNode.widgetSyncedState.value}`);
-        inputs[node.text.characters] = fn();
-      }
-    }
-  });
+//       if (inputNode.type === "WIDGET") {
+//         const fn = new Function(`return ${inputNode.widgetSyncedState.value}`);
+//         inputs[node.text.characters] = fn();
+//       }
+//     }
+//   });
 
-  return inputs;
-}
+//   return inputs;
+// }
+
+const initialState = {
+  code: "1 + 1",
+  value: "2",
+  type: "number",
+} as const;
 
 function App() {
   const widgetId = useWidgetId();
+  const [code, setCode] = useSyncedState<string>("code", initialState.code);
+  const [value, setValue] = useSyncedState<string>("value", initialState.value);
+  const [type, setType] = useSyncedState<ValueType>("type", initialState.type);
 
-  // TODO: track value type
-  const [code, setCode] = useSyncedState<string>("code", "1 + 1");
-  const [value, setValue] = useSyncedState<string>("value", "2");
-  const [type, setType] = useSyncedState<string>("type", "number");
+  function run(code: string) {
+    const result = evaluate(widgetId, code);
+
+    if (result.value) setValue(result.value);
+    if (result.type) setType(result.type);
+  }
 
   usePropertyMenu(
     [
       {
         tooltip: "Edit",
         propertyName: "edit",
+        itemType: "action",
+      },
+      {
+        tooltip: "Run",
+        propertyName: "run",
         itemType: "action",
       },
     ],
@@ -74,6 +91,10 @@ function App() {
         </script>
       `);
           return new Promise<void>(() => {});
+
+        case "run":
+          run(code);
+          return;
       }
     }
   );
@@ -82,20 +103,21 @@ function App() {
     figma.ui.onmessage = message => {
       const code = message;
       setCode(code);
+      run(code);
 
-      const inputs = getInputs(widgetId);
-      const value = evaluateExpression(inputs, code);
-      const type = typeof value;
-      setType(type);
-      switch (type) {
-        case "function":
-          setValue(value.toString());
-          break;
+      // const inputs = getInputs(widgetId);
+      // const value = evaluateExpression(inputs, code);
+      // const type = typeof value;
+      // setType(type);
+      // switch (type) {
+      //   case "function":
+      //     setValue(value.toString());
+      //     break;
 
-        default:
-          setValue(JSON.stringify(value, null, 2));
-          break;
-      }
+      //   default:
+      //     setValue(JSON.stringify(value, null, 2));
+      //     break;
+      // }
     };
   });
 
