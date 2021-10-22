@@ -5,6 +5,6 @@
   "editorType": ["figjam"],
   "permissions": [],
   "containsWidget": true,
-  "main": "build/code.js",
+  "main": "build/main.js",
   "widgetApi": "1.0.0"
 }

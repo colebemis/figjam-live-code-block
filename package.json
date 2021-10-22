@@ -4,7 +4,7 @@
   "description": "JavaScript REPL for FigJam",
   "scripts": {
     "test": "tsc --noEmit",
-    "build": "esbuild code.tsx --outfile=build/code.js --bundle",
+    "build": "esbuild src/main.tsx --outfile=build/main.js --bundle",
     "build:watch": "npm run build -- --watch"
   },
   "author": "Cole Bemis",
