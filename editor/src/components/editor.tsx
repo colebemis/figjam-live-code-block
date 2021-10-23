@@ -50,12 +50,15 @@ export function Editor() {
   return (
     <MonacoEditor
       language="javascript"
-      height="100vh"
       value={code}
       onChange={value => {
         const code = value || "";
         setCode(code);
         postMessage({ type: "codeChanged", code });
+      }}
+      height="100vh"
+      options={{
+        minimap: { enabled: false },
       }}
     />
   );
