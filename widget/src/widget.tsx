@@ -79,13 +79,19 @@ function Widget() {
   usePropertyMenu(
     [
       {
+        tooltip: "Run",
+        propertyName: "run",
+        itemType: "action",
+      },
+      {
         tooltip: "Edit",
         propertyName: "edit",
         itemType: "action",
       },
       {
-        tooltip: "Run",
-        propertyName: "run",
+        // TODO: Figure out a better name for this action
+        tooltip: "Clone",
+        propertyName: "clone",
         itemType: "action",
       },
     ],
@@ -102,6 +108,10 @@ function Widget() {
         case "run":
           figma.showUI(editorUI, { visible: false });
           waitForTask(run(code));
+          return;
+
+        case "clone":
+          clone(widgetId, value, valueType, error);
           return;
       }
     }
@@ -292,6 +302,24 @@ function getInputs(widgetId: string) {
   }
 
   return inputs;
+}
+
+// TODO: Figure out a better name for this function
+function clone(
+  widgetId: string,
+  value: string,
+  valueType: ValueType,
+  error: string
+) {
+  const widgetNode = figma.getNodeById(widgetId);
+
+  if (widgetNode?.type === "WIDGET") {
+    // Clone the current widget
+    const clonedWidgetNode = widgetNode.cloneWidget({});
+
+    // Position the clone to the right of the current widget
+    clonedWidgetNode.x += widgetNode.width + 100;
+  }
 }
 
 widget.register(Widget);
