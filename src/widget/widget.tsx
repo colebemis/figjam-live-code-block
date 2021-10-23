@@ -1,5 +1,6 @@
 /** @jsx figma.widget.h */
 import colors from "tailwindcss/colors";
+import { ValueType, EditorMessage, WidgetMessage } from "../types";
 const { widget } = figma;
 const {
   AutoLayout,
@@ -11,16 +12,6 @@ const {
   useWidgetId,
   waitForTask,
 } = widget;
-
-export type ValueType =
-  | "string"
-  | "number"
-  | "bigint"
-  | "boolean"
-  | "symbol"
-  | "undefined"
-  | "object"
-  | "function";
 
 const initialState = {
   code: "1 + 1",
@@ -55,12 +46,12 @@ function Widget() {
       const inputs = getInputs(widgetId);
 
       // Send code to the UI to evaluate
-      figma.ui.postMessage({ type: "evaluate", code, inputs });
+      postMessage({ type: "evaluate", code, inputs });
 
       // Wait for the UI to send back evaluated code
       figma.ui.on("message", handleMessage);
 
-      function handleMessage(message: any) {
+      function handleMessage(message: WidgetMessage) {
         if (message.type === "codeEvaluated") {
           const { value, valueType, error } = message;
 
@@ -95,7 +86,7 @@ function Widget() {
       switch (propertyName) {
         case "edit":
           figma.showUI(__uiFiles__["editor"]);
-          figma.ui.postMessage({ type: "initialize", code });
+          postMessage({ type: "initialize", code });
 
           // Keep UI open
           return new Promise<void>(() => {});
@@ -109,7 +100,7 @@ function Widget() {
   );
 
   useEffect(() => {
-    figma.ui.onmessage = message => {
+    figma.ui.onmessage = (message: WidgetMessage) => {
       switch (message.type) {
         case "codeChanged":
           const { code } = message;
@@ -251,6 +242,10 @@ function Widget() {
       </AutoLayout>
     </AutoLayout>
   );
+}
+
+function postMessage(message: EditorMessage) {
+  figma.ui.postMessage(message);
 }
 
 function getInputs(widgetId: string) {
