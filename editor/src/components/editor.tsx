@@ -5,6 +5,7 @@ import mapObj from "map-obj";
 
 export function Editor() {
   const [code, setCode] = React.useState("");
+  const [inputs, setInputs] = React.useState<Record<string, any>>({});
 
   window.onmessage = async (
     event: MessageEvent<{ pluginMessage?: EditorMessage }>
@@ -16,6 +17,7 @@ export function Editor() {
     switch (message.type) {
       case "initialize":
         setCode(message.code);
+        setInputs(parseInputValues(inputs));
         break;
 
       case "evaluate":

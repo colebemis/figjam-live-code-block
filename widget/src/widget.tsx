@@ -1,5 +1,5 @@
 import colors from "tailwindcss/colors";
-import { ValueType, EditorMessage, WidgetMessage } from "./types";
+import { ValueType, EditorMessage, WidgetMessage } from "../../types";
 const { widget } = figma;
 const {
   AutoLayout,
@@ -93,7 +93,8 @@ function Widget() {
       switch (propertyName) {
         case "edit":
           figma.showUI(editorUI, { width: 500, height: 300 });
-          postMessage({ type: "initialize", code });
+          const inputs = getInputs(widgetId);
+          postMessage({ type: "initialize", code, inputs });
 
           // Keep UI open
           return new Promise<void>(() => {});
