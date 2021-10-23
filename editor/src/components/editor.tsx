@@ -1,14 +1,14 @@
 import React from "react";
-import { render } from "react-dom";
 import { EditorMessage, WidgetMessage } from "../types";
 
-function Editor() {
-  const [code, setCode] = React.useState("cole");
+export function Editor() {
+  const [code, setCode] = React.useState("");
 
   window.onmessage = async (
     event: MessageEvent<{ pluginMessage: EditorMessage }>
   ) => {
     const message = event.data.pluginMessage;
+
     switch (message.type) {
       case "initialize":
         setCode(message.code);
@@ -19,6 +19,7 @@ function Editor() {
           const { code, inputs } = message;
           const scope = { fetch, ...inputs };
 
+          // eslint-disable-next-line no-new-func
           const fn = new Function(...Object.keys(scope), `return ${code}`);
           const value = await fn(...Object.values(scope));
 
@@ -55,7 +56,8 @@ function Editor() {
 }
 
 function postMessage(message: WidgetMessage) {
-  parent.postMessage({ pluginMessage: message }, "*");
+  // eslint-disable-next-line no-restricted-globals
+  parent.postMessage({ pluginMessage: message, pluginId: "*" }, "*");
 }
 
 function valueToString(value: any) {
@@ -68,5 +70,3 @@ function valueToString(value: any) {
       return JSON.stringify(value, null, 2);
   }
 }
-
-render(<Editor />, document.getElementById("root"));
