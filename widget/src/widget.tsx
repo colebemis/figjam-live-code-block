@@ -312,6 +312,30 @@ async function clone(widgetId: string, setCode: (newValue: string) => void) {
   const clonedWidgetNode = widgetNode.clone();
 
   // Move all connectors to clone
+  for (const node of figma.currentPage.children) {
+    // Ignore nodes that aren't connectors
+    if (node.type !== "CONNECTOR") continue;
+
+    if (
+      "endpointNodeId" in node.connectorStart &&
+      node.connectorStart.endpointNodeId === widgetId
+    ) {
+      node.connectorStart = {
+        ...node.connectorStart,
+        endpointNodeId: clonedWidgetNode.id,
+      };
+    }
+
+    if (
+      "endpointNodeId" in node.connectorEnd &&
+      node.connectorEnd.endpointNodeId === widgetId
+    ) {
+      node.connectorEnd = {
+        ...node.connectorEnd,
+        endpointNodeId: clonedWidgetNode.id,
+      };
+    }
+  }
 
   // Change code of current widget
   setCode("value");
