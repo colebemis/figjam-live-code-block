@@ -4,8 +4,7 @@
   "description": "JavaScript REPL for FigJam",
   "scripts": {
     "test": "tsc --noEmit",
-    "build": "webpack --mode=production",
-    "build:watch": "npm run build -- --watch"
+    "build": "webpack --mode=production"
   },
   "author": "Cole Bemis",
   "license": "MIT",
