@@ -39,8 +39,6 @@ window.onmessage = async event => {
           error: "",
         });
       } catch (error) {
-        console.error("hi", error);
-
         const errorMessage =
           error instanceof Error ? error.message : String(error);
 
