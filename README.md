@@ -2,9 +2,17 @@
 
 [Preview](https://twitter.com/colebemis/status/1450977693202145283)
 
+Could be used for:
+- Code review
+- Teaching
+- Debugging
+- Pair programming
+- Technical interviews
+- ???
+
 ## Installation
 
-_TODO_
+_Coming soon to the Figma Community_
 
 ## Usage
 
