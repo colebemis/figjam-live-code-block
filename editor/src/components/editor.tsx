@@ -1,6 +1,6 @@
 import MonacoEditor from "@monaco-editor/react";
 import React from "react";
-import { EditorMessage, WidgetMessage } from "../types";
+import { EditorMessage, WidgetMessage } from "../../../types";
 import mapObj from "map-obj";
 
 export function Editor() {
