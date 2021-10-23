@@ -111,7 +111,7 @@ function Widget() {
           return;
 
         case "clone":
-          clone(widgetId, value, valueType, error);
+          waitForTask(clone(widgetId, setCode));
           return;
       }
     }
@@ -277,7 +277,7 @@ function getInputs(widgetId: string) {
     // Ignore connectors that don't end at a node
     if (!("endpointNodeId" in node.connectorEnd)) continue;
 
-    // Ignore connectors that don'e end at the current widget
+    // Ignore connectors that don't end at the current widget
     if (node.connectorEnd.endpointNodeId !== widgetId) continue;
 
     // Ignore connectors that don't start at a node
@@ -305,21 +305,37 @@ function getInputs(widgetId: string) {
 }
 
 // TODO: Figure out a better name for this function
-function clone(
-  widgetId: string,
-  value: string,
-  valueType: ValueType,
-  error: string
-) {
-  const widgetNode = figma.getNodeById(widgetId);
+async function clone(widgetId: string, setCode: (newValue: string) => void) {
+  const widgetNode = figma.getNodeById(widgetId) as WidgetNode;
 
-  if (widgetNode?.type === "WIDGET") {
-    // Clone the current widget
-    const clonedWidgetNode = widgetNode.cloneWidget({});
+  // Clone the current widget
+  const clonedWidgetNode = widgetNode.clone();
 
-    // Position the clone to the right of the current widget
-    clonedWidgetNode.x += widgetNode.width + 100;
-  }
+  // Move all connectors to clone
+
+  // Change code of current widget
+  setCode("value");
+
+  // Move the current widget to the right of the clone
+  widgetNode.x += clonedWidgetNode.width + 160;
+
+  // Add connector between clone and the current widget
+  const connectorNode = figma.createConnector();
+
+  connectorNode.connectorStart = {
+    endpointNodeId: clonedWidgetNode.id,
+    magnet: "AUTO",
+  };
+
+  connectorNode.connectorEnd = {
+    endpointNodeId: widgetNode.id,
+    magnet: "AUTO",
+  };
+
+  // Font needs to be loaded before changing the text characters
+  // Reference: https://www.figma.com/plugin-docs/api/properties/TextNode-characters/
+  await figma.loadFontAsync({ family: "Inter", style: "Medium" });
+  connectorNode.text.characters = "value";
 }
 
 widget.register(Widget);
