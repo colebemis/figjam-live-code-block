@@ -1,3 +1,4 @@
+/** @jsx figma.widget.h */
 import colors from "tailwindcss/colors";
 const { widget } = figma;
 const {
@@ -29,7 +30,7 @@ const initialState = {
   isExpanded: false,
 } as const;
 
-function App() {
+function Widget() {
   const widgetId = useWidgetId();
 
   // Initialize state
@@ -252,8 +253,6 @@ function App() {
   );
 }
 
-widget.register(App);
-
 function getInputs(widgetId: string) {
   const inputs: Record<string, any> = {};
 
@@ -293,3 +292,5 @@ function getInputs(widgetId: string) {
 
   return inputs;
 }
+
+widget.register(Widget);

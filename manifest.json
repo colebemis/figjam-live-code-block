@@ -6,7 +6,7 @@
   "editorType": ["figjam"],
   "permissions": [],
   "containsWidget": true,
-  "main": "build/main.js",
+  "main": "build/widget.js",
   "ui": {
     "editor": "build/editor.html"
   }
