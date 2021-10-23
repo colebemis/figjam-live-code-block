@@ -1,6 +1,5 @@
-/** @jsx figma.widget.h */
 import colors from "tailwindcss/colors";
-import { ValueType, EditorMessage, WidgetMessage } from "../types";
+import { ValueType, EditorMessage, WidgetMessage } from "./types";
 const { widget } = figma;
 const {
   AutoLayout,
@@ -12,6 +11,14 @@ const {
   useWidgetId,
   waitForTask,
 } = widget;
+
+// TODO: Replace https://vscode.dev with production editor URL
+const editorUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://vscode.dev"
+    : "https://vscode.dev";
+
+const editorUI = `<script>window.location.href = '${editorUrl}'</script>`;
 
 const initialState = {
   code: "1 + 1",
@@ -85,14 +92,14 @@ function Widget() {
     ({ propertyName }) => {
       switch (propertyName) {
         case "edit":
-          figma.showUI(__uiFiles__["editor"]);
+          figma.showUI(editorUI, { width: 500, height: 300 });
           postMessage({ type: "initialize", code });
 
           // Keep UI open
           return new Promise<void>(() => {});
 
         case "run":
-          figma.showUI(__uiFiles__["editor"], { visible: false });
+          figma.showUI(editorUI, { visible: false });
           waitForTask(run(code));
           return;
       }

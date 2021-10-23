@@ -1,29 +1,7 @@
 {
+  "private": true,
   "name": "figjam-javascript-repl",
-  "version": "0.0.0",
-  "description": "JavaScript REPL for FigJam",
-  "scripts": {
-    "test": "tsc --noEmit",
-    "build": "webpack --mode=production"
-  },
-  "author": "Cole Bemis",
-  "license": "MIT",
-  "devDependencies": {
-    "@figma/plugin-typings": "^1.37.0",
-    "@figma/widget-typings": "^1.0.1",
-    "@types/react": "^17.0.31",
-    "@types/react-dom": "^17.0.10",
-    "@types/tailwindcss": "^2.2.1",
-    "esbuild-loader": "^2.16.0",
-    "html-webpack-inline-source-plugin": "^1.0.0-beta.2",
-    "html-webpack-plugin": "^5.4.0",
-    "typescript": "^4.4.4",
-    "webpack": "^5.59.1",
-    "webpack-cli": "^4.9.1"
-  },
-  "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "tailwindcss": "^2.2.17"
-  }
+  "workspaces": [
+    "widget"
+  ]
 }

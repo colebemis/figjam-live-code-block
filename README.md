@@ -31,7 +31,7 @@ _TODO_
 1. Install the dependencies
 
    ```shell
-   npm install
+   yarn
    ```
 
 1. Build the project

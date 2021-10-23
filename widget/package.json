@@ -1,0 +1,20 @@
+{
+  "name": "widget",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "tsc --noEmit",
+    "build": "node scripts/build.js",
+    "dev": "node scripts/dev.js"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.37.0",
+    "@figma/widget-typings": "^1.0.1",
+    "@types/node": "^16.11.4",
+    "@types/tailwindcss": "^2.2.1",
+    "esbuild": "^0.13.8",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "tailwindcss": "^2.2.17"
+  }
+}
