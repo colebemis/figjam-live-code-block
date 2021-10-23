@@ -16,7 +16,7 @@ const {
 const editorUrl =
   process.env.NODE_ENV === "production"
     ? "https://vscode.dev"
-    : "https://vscode.dev";
+    : "http://localhost:3000";
 
 const editorUI = `<script>window.location.href = '${editorUrl}'</script>`;
 
