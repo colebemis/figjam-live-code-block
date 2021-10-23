@@ -1,4 +1,4 @@
-import MonacoEditor from "@monaco-editor/react";
+import MonacoEditor, { useMonaco } from "@monaco-editor/react";
 import React from "react";
 import { EditorMessage, WidgetMessage } from "../../../types";
 import mapObj from "map-obj";
@@ -17,7 +17,7 @@ export function Editor() {
     switch (message.type) {
       case "initialize":
         setCode(message.code);
-        setInputs(parseInputValues(inputs));
+        setInputs(parseInputValues(message.inputs));
         break;
 
       case "evaluate":
@@ -49,6 +49,20 @@ export function Editor() {
         break;
     }
   };
+
+  const monaco = useMonaco();
+
+  // Add IntelliSense support for input variables
+  React.useEffect(() => {
+    const inputsLib = Object.entries(inputs)
+      .map(([name, value]) => `declare const ${name}: ${valueToType(value)}`)
+      .join("\n");
+
+    monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+      inputsLib,
+      "inputs"
+    );
+  }, [monaco, inputs]);
 
   return (
     <MonacoEditor
@@ -89,4 +103,34 @@ function parseInputValues(inputs: Record<string, string>): Record<string, any> {
     const parsedValue = new Function(`return ${value}`)();
     return [key, parsedValue];
   });
+}
+
+function valueToType(value: any): string {
+  if (value === null) {
+    return "null";
+  }
+
+  if (Array.isArray(value)) {
+    if (value.length === 0) return "Array<unknown>";
+
+    return `Array<${valueToType(value[0])}>`;
+  }
+
+  const valueType = typeof value;
+
+  switch (valueType) {
+    case "object":
+      const entries: string[] = Object.entries(value).map(
+        ([key, value]) => `${key}: ${valueToType(value)}`
+      );
+
+      return `{ ${entries.join(";")} }`;
+
+    case "function":
+      // TODO: get parameter names
+      return "Function";
+
+    default:
+      return valueType;
+  }
 }
