@@ -34,10 +34,10 @@ _TODO_
    yarn
    ```
 
-1. Build the project
+1. Run local development scripts
 
    ```shell
-   npm run build
+   yarn start
    ```
 
 1. Open the [Figma desktop app](https://www.figma.com/downloads/)

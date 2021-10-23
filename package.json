@@ -1,8 +1,15 @@
 {
-  "private": true,
   "name": "figjam-javascript-repl",
+  "private": true,
   "workspaces": [
     "widget",
     "editor"
-  ]
+  ],
+  "scripts": {
+    "start": "concurrently -n widget,editor \"yarn workspace widget start\" \"yarn workspace editor start\""
+  },
+  "dependencies": {
+    "concurrently": "^6.3.0"
+  }
 }
+
