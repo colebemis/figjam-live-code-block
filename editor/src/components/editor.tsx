@@ -1,3 +1,4 @@
+import MonacoEditor from "@monaco-editor/react";
 import React from "react";
 import { EditorMessage, WidgetMessage } from "../types";
 
@@ -5,9 +6,11 @@ export function Editor() {
   const [code, setCode] = React.useState("");
 
   window.onmessage = async (
-    event: MessageEvent<{ pluginMessage: EditorMessage }>
+    event: MessageEvent<{ pluginMessage?: EditorMessage }>
   ) => {
     const message = event.data.pluginMessage;
+
+    if (!message) return;
 
     switch (message.type) {
       case "initialize":
@@ -45,11 +48,14 @@ export function Editor() {
   };
 
   return (
-    <textarea
+    <MonacoEditor
+      language="javascript"
+      height="100vh"
       value={code}
-      onInput={event => {
-        setCode(event.currentTarget.value);
-        postMessage({ type: "codeChanged", code: event.currentTarget.value });
+      onChange={value => {
+        const code = value || "";
+        setCode(code);
+        postMessage({ type: "codeChanged", code });
       }}
     />
   );
