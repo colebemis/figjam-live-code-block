@@ -291,14 +291,16 @@ function getInputs(widgetId: string) {
     // Ignore connectors that don't start at a widget with a value
     if (typeof startNode.widgetSyncedState.value === "undefined") continue;
 
-    // TODO: Check for errors on start node
-
     const variableName = node.text.characters;
 
     // Don't store variables without a name
     if (!variableName) continue;
 
-    inputs[variableName] = startNode.widgetSyncedState.value;
+    const widgetState = startNode.widgetSyncedState;
+
+    const value = widgetState.error ? undefined : widgetState.value;
+
+    inputs[variableName] = value;
   }
 
   return inputs;
