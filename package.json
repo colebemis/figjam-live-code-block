@@ -5,7 +5,7 @@
   "scripts": {
     "test": "tsc --noEmit",
     "build": "webpack --mode=production",
-    "build:watch": "webpack --mode=development --watch"
+    "build:watch": "npm run build -- --watch"
   },
   "author": "Cole Bemis",
   "license": "MIT",
