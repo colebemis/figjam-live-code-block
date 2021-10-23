@@ -13,7 +13,7 @@ export type ValueType =
 // Messages that the editor can receive
 export type EditorMessage =
   | { type: "initialize"; code: string }
-  | { type: "evaluate"; code: string; inputs: Record<string, any> };
+  | { type: "evaluate"; code: string; inputs: Record<string, string> };
 
 // Messages that the widget can recieve
 export type WidgetMessage =

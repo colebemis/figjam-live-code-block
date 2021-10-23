@@ -1,6 +1,7 @@
 import MonacoEditor from "@monaco-editor/react";
 import React from "react";
 import { EditorMessage, WidgetMessage } from "../types";
+import mapObj from "map-obj";
 
 export function Editor() {
   const [code, setCode] = React.useState("");
@@ -20,7 +21,7 @@ export function Editor() {
       case "evaluate":
         try {
           const { code, inputs } = message;
-          const scope = { fetch, ...inputs };
+          const scope = { fetch, ...parseInputValues(inputs) };
 
           // eslint-disable-next-line no-new-func
           const fn = new Function(...Object.keys(scope), `return ${code}`);
@@ -78,4 +79,12 @@ function valueToString(value: any) {
     default:
       return JSON.stringify(value, null, 2);
   }
+}
+
+function parseInputValues(inputs: Record<string, string>): Record<string, any> {
+  return mapObj(inputs, (key, value) => {
+    // eslint-disable-next-line no-new-func
+    const parsedValue = new Function(`return ${value}`)();
+    return [key, parsedValue];
+  });
 }

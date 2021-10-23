@@ -256,7 +256,7 @@ function postMessage(message: EditorMessage) {
 }
 
 function getInputs(widgetId: string) {
-  const inputs: Record<string, any> = {};
+  const inputs: Record<string, string> = {};
 
   // Search all nodes in the document
   for (const node of figma.currentPage.children) {
@@ -284,12 +284,10 @@ function getInputs(widgetId: string) {
 
     const variableName = node.text.characters;
 
-    const value = new Function(`return ${startNode.widgetSyncedState.value}`)();
-
     // Don't store variables without a name
     if (!variableName) continue;
 
-    inputs[variableName] = value;
+    inputs[variableName] = startNode.widgetSyncedState.value;
   }
 
   return inputs;
