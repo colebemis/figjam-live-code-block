@@ -1,10 +1,8 @@
 {
   "compilerOptions": {
     "jsx": "react",
-    "jsxFactory": "figma.widget.h",
     "target": "es6",
     "lib": ["es2017", "dom"],
-    "typeRoots": ["./node_modules/@types", "./node_modules/@figma"],
     "outDir": "build",
     "moduleResolution": "node",
     "esModuleInterop": true,

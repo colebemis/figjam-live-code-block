@@ -6,8 +6,8 @@ module.exports = (env, argv) => ({
   // This is necessary because Figma's 'eval' works differently than normal eval
   devtool: argv.mode === "production" ? false : "inline-source-map",
   entry: {
-    main: "./src/main.tsx",
-    editor: "./src/editor.tsx",
+    widget: "./src/widget/widget.tsx",
+    editor: "./src/editor/editor.tsx",
   },
   output: {
     filename: "[name].js",
@@ -23,14 +23,18 @@ module.exports = (env, argv) => ({
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        loader: "esbuild-loader",
         exclude: /node_modules/,
+        options: {
+          loader: "tsx",
+          target: "es2015",
+        },
       },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/editor.html",
+      template: "./src/editor/editor.html",
       inject: "body",
       filename: "editor.html",
       inlineSource: ".(js)$",

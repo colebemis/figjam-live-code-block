@@ -1,3 +1,12 @@
+import React from "react";
+import { render } from "react-dom";
+
+function App() {
+  return <div>hello world</div>;
+}
+
+render(<App />, document.getElementById("root"));
+
 const editor = document.getElementById("editor");
 
 // @ts-ignore
@@ -46,7 +55,7 @@ window.onmessage = async event => {
   }
 };
 
-function postMessage(message: string) {
+function postMessage(message: any) {
   parent.postMessage({ pluginMessage: message }, "*");
 }
 
