@@ -23,7 +23,12 @@ export function Editor() {
       case "evaluate":
         try {
           const { code, inputs } = message;
-          const scope = { fetch, ...parseInputValues(inputs) };
+
+          const scope = {
+            fetch,
+            fetchJson,
+            ...parseInputValues(inputs),
+          };
 
           // eslint-disable-next-line no-new-func
           const fn = new Function(...Object.keys(scope), `return ${code}`);
@@ -84,6 +89,12 @@ export function Editor() {
 function postMessage(message: WidgetMessage) {
   // eslint-disable-next-line no-restricted-globals
   parent.postMessage({ pluginMessage: message, pluginId: "*" }, "*");
+}
+
+/** A convenient wrapper around `fetch` just for JSON */
+async function fetchJson(input: RequestInfo, init?: RequestInit) {
+  const response = await fetch(input, init);
+  return response.json();
 }
 
 function valueToString(value: any) {
