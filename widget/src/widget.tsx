@@ -153,9 +153,9 @@ function Widget() {
   return (
     <AutoLayout
       direction="vertical"
-      horizontalAlignItems="center"
-      verticalAlignItems="center"
-      width={400}
+      horizontalAlignItems="start"
+      verticalAlignItems="start"
+      width="hug-contents"
       height="hug-contents"
       fill={colors.coolGray[800]}
       cornerRadius={12}
@@ -167,6 +167,8 @@ function Widget() {
         spread: 2,
       }}
     >
+      {/* HACK: Set min-width of widget to 400 */}
+      <Frame width={400} height={0.01} />
       {/* <AutoLayout
         direction="vertical"
         horizontalAlignItems="start"
@@ -209,7 +211,7 @@ function Widget() {
         direction="vertical"
         horizontalAlignItems="start"
         verticalAlignItems="start"
-        width="fill-parent"
+        width="hug-contents"
         spacing={8}
         padding={16}
       >
@@ -222,7 +224,7 @@ function Widget() {
             direction="vertical"
             horizontalAlignItems="start"
             verticalAlignItems="start"
-            width="fill-parent"
+            width="hug-contents"
             spacing={8}
           >
             {value.split("\n").length > 10 ? (
@@ -241,7 +243,7 @@ function Widget() {
               direction="vertical"
               horizontalAlignItems="start"
               verticalAlignItems="start"
-              width="fill-parent"
+              width="hug-contents"
             >
               {value
                 .split("\n")
