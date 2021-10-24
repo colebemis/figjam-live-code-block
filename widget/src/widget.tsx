@@ -1,6 +1,6 @@
 import colors from "tailwindcss/colors";
 import { ValueType, WidgetMessage } from "../../types";
-import { getEditorUI, getInputs, postMessage } from "./utils";
+import { connectNodes, getEditorUI, getInputs, postMessage } from "./utils";
 const { widget } = figma;
 const {
   AutoLayout,
@@ -295,22 +295,7 @@ async function clone(widgetId: string, setCode: (newValue: string) => void) {
   widgetNode.x += clonedWidgetNode.width + 160;
 
   // Add connector between clone and the current widget
-  const connectorNode = figma.createConnector();
-
-  connectorNode.connectorStart = {
-    endpointNodeId: clonedWidgetNode.id,
-    magnet: "AUTO",
-  };
-
-  connectorNode.connectorEnd = {
-    endpointNodeId: widgetNode.id,
-    magnet: "AUTO",
-  };
-
-  // Font needs to be loaded before changing the text characters
-  // Reference: https://www.figma.com/plugin-docs/api/properties/TextNode-characters/
-  await figma.loadFontAsync({ family: "Inter", style: "Medium" });
-  connectorNode.text.characters = "value";
+  await connectNodes(clonedWidgetNode, widgetNode, "value");
 }
 
 widget.register(Widget);

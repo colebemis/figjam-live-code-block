@@ -53,3 +53,28 @@ export function getInputs(widgetId: string) {
 
   return inputs;
 }
+
+export async function connectNodes(
+  startNode: BaseNode,
+  endNode: BaseNode,
+  text?: string
+) {
+  const connector = figma.createConnector();
+
+  connector.connectorStart = {
+    endpointNodeId: startNode.id,
+    magnet: "AUTO",
+  };
+
+  connector.connectorEnd = {
+    endpointNodeId: endNode.id,
+    magnet: "AUTO",
+  };
+
+  if (text) {
+    // Font needs to be loaded before changing the text characters
+    // Reference: https://www.figma.com/plugin-docs/api/properties/TextNode-characters/
+    await figma.loadFontAsync({ family: "Inter", style: "Medium" });
+    connector.text.characters = text;
+  }
+}
