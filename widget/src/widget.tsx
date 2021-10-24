@@ -1,6 +1,12 @@
 import colors from "tailwindcss/colors";
 import { ValueType, WidgetMessage } from "../../types";
-import { connectNodes, getEditorUI, getInputs, postMessage } from "./utils";
+import {
+  connectNodes,
+  getEditorUI,
+  getInputs,
+  postMessage,
+  transferConnectors,
+} from "./utils";
 const { widget } = figma;
 const {
   AutoLayout,
@@ -69,6 +75,26 @@ function Widget() {
     });
   }
 
+  // TODO: Figure out a better name for this function
+  async function clone(widgetId: string) {
+    const widgetNode = figma.getNodeById(widgetId) as WidgetNode;
+
+    // Clone the current widget
+    const clonedWidgetNode = widgetNode.clone();
+
+    // Move the current widget to the right of the clone
+    widgetNode.x += clonedWidgetNode.width + 160;
+
+    // Transfer connectors to clone
+    transferConnectors(widgetNode, clonedWidgetNode);
+
+    // Add connector between clone and the current widget
+    await connectNodes(clonedWidgetNode, widgetNode, "value");
+
+    // Change code of current widget
+    setCode("value");
+  }
+
   usePropertyMenu(
     [
       {
@@ -104,7 +130,7 @@ function Widget() {
           return;
 
         case "clone":
-          waitForTask(clone(widgetId, setCode));
+          waitForTask(clone(widgetId));
           return;
       }
     }
@@ -253,49 +279,6 @@ function Widget() {
       </AutoLayout>
     </AutoLayout>
   );
-}
-
-// TODO: Figure out a better name for this function
-async function clone(widgetId: string, setCode: (newValue: string) => void) {
-  const widgetNode = figma.getNodeById(widgetId) as WidgetNode;
-
-  // Clone the current widget
-  const clonedWidgetNode = widgetNode.clone();
-
-  // Move all connectors to clone
-  for (const node of figma.currentPage.children) {
-    // Ignore nodes that aren't connectors
-    if (node.type !== "CONNECTOR") continue;
-
-    if (
-      "endpointNodeId" in node.connectorStart &&
-      node.connectorStart.endpointNodeId === widgetId
-    ) {
-      node.connectorStart = {
-        ...node.connectorStart,
-        endpointNodeId: clonedWidgetNode.id,
-      };
-    }
-
-    if (
-      "endpointNodeId" in node.connectorEnd &&
-      node.connectorEnd.endpointNodeId === widgetId
-    ) {
-      node.connectorEnd = {
-        ...node.connectorEnd,
-        endpointNodeId: clonedWidgetNode.id,
-      };
-    }
-  }
-
-  // Change code of current widget
-  setCode("value");
-
-  // Move the current widget to the right of the clone
-  widgetNode.x += clonedWidgetNode.width + 160;
-
-  // Add connector between clone and the current widget
-  await connectNodes(clonedWidgetNode, widgetNode, "value");
 }
 
 widget.register(Widget);

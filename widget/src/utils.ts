@@ -57,7 +57,7 @@ export function getInputs(widgetId: string) {
 export async function connectNodes(
   startNode: BaseNode,
   endNode: BaseNode,
-  text?: string
+  connectorText?: string
 ) {
   const connector = figma.createConnector();
 
@@ -71,10 +71,39 @@ export async function connectNodes(
     magnet: "AUTO",
   };
 
-  if (text) {
+  if (connectorText) {
     // Font needs to be loaded before changing the text characters
     // Reference: https://www.figma.com/plugin-docs/api/properties/TextNode-characters/
     await figma.loadFontAsync({ family: "Inter", style: "Medium" });
-    connector.text.characters = text;
+    connector.text.characters = connectorText;
+  }
+}
+
+export function transferConnectors(from: BaseNode, to: BaseNode) {
+  for (const node of figma.currentPage.children) {
+    // Ignore nodes that aren't connectors
+    if (node.type !== "CONNECTOR") continue;
+
+    // Tranfer connectors that start at `from` node
+    if (
+      "endpointNodeId" in node.connectorStart &&
+      node.connectorStart.endpointNodeId === from.id
+    ) {
+      node.connectorStart = {
+        ...node.connectorStart,
+        endpointNodeId: to.id,
+      };
+    }
+
+    // Tranfer connectors that end at `from` node
+    if (
+      "endpointNodeId" in node.connectorEnd &&
+      node.connectorEnd.endpointNodeId === from.id
+    ) {
+      node.connectorEnd = {
+        ...node.connectorEnd,
+        endpointNodeId: to.id,
+      };
+    }
   }
 }
