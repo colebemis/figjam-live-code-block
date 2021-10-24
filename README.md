@@ -25,10 +25,13 @@ _TODO_
 
 Every live code block has access to the following variables:
 
-| Name          | Type       | Description                                                        |
-| ------------- | ---------- | ------------------------------------------------------------------ |
-| `fetch()`     | `function` | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/fetch) |
-| `fetchJson()` | `function` |                                                                    |
+| Name                   | Type       | Description                                                                                         |
+| ---------------------- | ---------- | --------------------------------------------------------------------------------------------------- |
+| `fetch()`              | `function` | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/fetch)                                  |
+| `fetchJson()`          | `function` |                                                                                                     |
+| ~~`Math`~~ _Planned_   | `object`   | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math)   |
+| ~~`Array`~~ _Planned_  | `object`   | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)  |
+| ~~`Object`~~ _Planned_ | `object`   | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) |
 
 ## Local development
 
