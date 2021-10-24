@@ -1,6 +1,8 @@
-# FigJam JavaScript REPL widget
+# FigJam Live Code Block Widget
 
-[Preview](https://twitter.com/colebemis/status/1450977693202145283)
+Turn FigJam into a collaborative JavaScript canvas
+
+![cover](/assets/cover.png)
 
 Could be used for:
 
@@ -47,3 +49,7 @@ _TODO_
 1. Select `/path/to/figjam-javascript-repl/manifest.json`
 
 1. Add the widget to the canvas by selecting `Menu > Widgets > Developement > JavaScript REPL` or search for `JavaScript REPL` in the quick actions bar (`⌘ /`)
+
+## Prior art
+
+- [natto.dev](https://natto.dev/) by [@\_paulshen](https://twitter.com/_paulshen)
