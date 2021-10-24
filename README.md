@@ -21,6 +21,15 @@ _Coming soon to the Figma Community_
 
 _TODO_
 
+### Global variables
+
+Every live code block has access to the following variables:
+
+| Name        | Type       | Description                                                        |
+| ----------- | ---------- | ------------------------------------------------------------------ |
+| `fetch`     | `function` | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/fetch) |
+| `fetchJson` | `function` |                                                                    |
+
 ## Local development
 
 1. Clone the repository
