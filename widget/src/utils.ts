@@ -5,10 +5,9 @@ export function postMessage(message: EditorMessage) {
 }
 
 export function getEditorUI() {
-  // TODO: Replace https://vscode.dev with production editor URL
   const editorUrl =
     process.env.NODE_ENV === "production"
-      ? "https://vscode.dev"
+      ? "https://figjam-javascript-repl.vercel.app/"
       : "http://localhost:3000";
 
   return `<script>window.location.href = '${editorUrl}'</script>`;
