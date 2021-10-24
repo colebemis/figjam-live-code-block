@@ -159,16 +159,25 @@ function Widget() {
       height="hug-contents"
       fill={colors.coolGray[800]}
       cornerRadius={12}
-      effect={{
-        type: "drop-shadow",
-        color: { r: 0, g: 0, b: 0, a: 0.2 },
-        offset: { x: 0, y: 0 },
-        blur: 2,
-        spread: 2,
-      }}
+      effect={[
+        {
+          type: "drop-shadow",
+          color: { r: 0, g: 0, b: 0, a: 0.2 },
+          offset: { x: 0, y: 1 },
+          blur: 2,
+          spread: 0,
+        },
+        {
+          type: "drop-shadow",
+          color: { r: 0, g: 0, b: 0, a: 0.15 },
+          offset: { x: 0, y: 4 },
+          blur: 8,
+          spread: 0,
+        },
+      ]}
     >
       {/* HACK: Set min-width of widget to 400 */}
-      <Frame width={400} height={0.01} />
+      <Frame width={300} height={0.01} />
       {/* <AutoLayout
         direction="vertical"
         horizontalAlignItems="start"
