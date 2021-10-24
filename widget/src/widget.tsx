@@ -1,5 +1,12 @@
 import colors from "tailwindcss/colors";
-import { ValueType, EditorMessage, WidgetMessage } from "../../types";
+import { ValueType, WidgetMessage } from "../../types";
+import {
+  connectNodes,
+  getEditorUI,
+  getInputs,
+  postMessage,
+  transferConnectors,
+} from "./utils";
 const { widget } = figma;
 const {
   AutoLayout,
@@ -11,14 +18,6 @@ const {
   useWidgetId,
   waitForTask,
 } = widget;
-
-// TODO: Replace https://vscode.dev with production editor URL
-const editorUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://vscode.dev"
-    : "http://localhost:3000";
-
-const editorUI = `<script>window.location.href = '${editorUrl}'</script>`;
 
 const initialState = {
   code: "1 + 1",
@@ -76,23 +75,49 @@ function Widget() {
     });
   }
 
+  // TODO: Figure out a better name for this function
+  async function clone(widgetId: string) {
+    const widgetNode = figma.getNodeById(widgetId) as WidgetNode;
+
+    // Clone the current widget
+    const clonedWidgetNode = widgetNode.clone();
+
+    // Move the current widget to the right of the clone
+    widgetNode.x += clonedWidgetNode.width + 160;
+
+    // Transfer connectors to clone
+    transferConnectors(widgetNode, clonedWidgetNode);
+
+    // Add connector between clone and the current widget
+    await connectNodes(clonedWidgetNode, widgetNode, "value");
+
+    // Change code of current widget
+    setCode("value");
+  }
+
   usePropertyMenu(
     [
+      {
+        tooltip: "Run",
+        propertyName: "run",
+        itemType: "action",
+      },
       {
         tooltip: "Edit",
         propertyName: "edit",
         itemType: "action",
       },
       {
-        tooltip: "Run",
-        propertyName: "run",
+        // TODO: Figure out a better name for this action
+        tooltip: "Clone",
+        propertyName: "clone",
         itemType: "action",
       },
     ],
     ({ propertyName }) => {
       switch (propertyName) {
         case "edit":
-          figma.showUI(editorUI, { width: 500, height: 300 });
+          figma.showUI(getEditorUI(), { width: 500, height: 300 });
           const inputs = getInputs(widgetId);
           postMessage({ type: "initialize", code, inputs });
 
@@ -100,8 +125,12 @@ function Widget() {
           return new Promise<void>(() => {});
 
         case "run":
-          figma.showUI(editorUI, { visible: false });
+          figma.showUI(getEditorUI(), { visible: false });
           waitForTask(run(code));
+          return;
+
+        case "clone":
+          waitForTask(clone(widgetId));
           return;
       }
     }
@@ -232,7 +261,7 @@ function Widget() {
                 <Text
                   fontFamily="JetBrains Mono"
                   fill={colors.teal[400]}
-                  onClick={() => setIsExpanded(!isExpanded)}
+                  onClick={() => setIsExpanded(true)}
                 >
                   ...
                 </Text>
@@ -250,48 +279,6 @@ function Widget() {
       </AutoLayout>
     </AutoLayout>
   );
-}
-
-function postMessage(message: EditorMessage) {
-  figma.ui.postMessage(message);
-}
-
-function getInputs(widgetId: string) {
-  const inputs: Record<string, string> = {};
-
-  // Search all nodes in the document
-  for (const node of figma.currentPage.children) {
-    // Ignore nodes that aren't connectors
-    if (node.type !== "CONNECTOR") continue;
-
-    // Ignore connectors that don't end at a node
-    if (!("endpointNodeId" in node.connectorEnd)) continue;
-
-    // Ignore connectors that don'e end at the current widget
-    if (node.connectorEnd.endpointNodeId !== widgetId) continue;
-
-    // Ignore connectors that don't start at a node
-    if (!("endpointNodeId" in node.connectorStart)) continue;
-
-    const startNode = figma.getNodeById(node.connectorStart.endpointNodeId);
-
-    // Ignore connectors that don't start at a widget
-    if (startNode?.type !== "WIDGET") continue;
-
-    // Ignore connectors that don't start at a widget with a value
-    if (typeof startNode.widgetSyncedState.value === "undefined") continue;
-
-    // TODO: Check for errors on start node
-
-    const variableName = node.text.characters;
-
-    // Don't store variables without a name
-    if (!variableName) continue;
-
-    inputs[variableName] = startNode.widgetSyncedState.value;
-  }
-
-  return inputs;
 }
 
 widget.register(Widget);
