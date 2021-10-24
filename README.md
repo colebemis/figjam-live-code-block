@@ -21,6 +21,13 @@ _Coming soon to the Figma Community_
 
 _TODO_
 
+- insert
+- change expression\* (notice output changes as you edit)
+- run the code when the editor is closed using the run action
+- use the output of one block as an input to another block using connectors
+- autocomplete inputs in editor
+- create a new block that references that output value of the current block
+
 ### Global variables
 
 Every live code block has access to the following variables:
