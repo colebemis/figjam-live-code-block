@@ -242,7 +242,7 @@ function Widget() {
                 <Text
                   fontFamily="JetBrains Mono"
                   fill={colors.teal[400]}
-                  onClick={() => setIsExpanded(!isExpanded)}
+                  onClick={() => setIsExpanded(true)}
                 >
                   ...
                 </Text>
