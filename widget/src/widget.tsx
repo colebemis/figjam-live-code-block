@@ -143,7 +143,6 @@ function Widget() {
           const { code } = message;
           setCode(code);
 
-          // TODO: debounce this function call to avoid flashing errors as users type
           run(code);
           break;
       }

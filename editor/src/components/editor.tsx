@@ -2,6 +2,9 @@ import MonacoEditor, { useMonaco } from "@monaco-editor/react";
 import React from "react";
 import { EditorMessage, WidgetMessage } from "../../../types";
 import mapObj from "map-obj";
+import debounce from "debounce";
+
+const debouncedPostMessage = debounce(postMessage, 1000);
 
 export function Editor() {
   const [code, setCode] = React.useState("");
@@ -76,7 +79,7 @@ export function Editor() {
       onChange={value => {
         const code = value || "";
         setCode(code);
-        postMessage({ type: "codeChanged", code });
+        debouncedPostMessage({ type: "codeChanged", code });
       }}
       height="100vh"
       options={{
