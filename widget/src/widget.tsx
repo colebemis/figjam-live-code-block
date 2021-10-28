@@ -1,5 +1,6 @@
 import colors from "tailwindcss/colors";
 import { ValueType, WidgetMessage } from "../../types";
+import { codeIcon, playIcon, plusIcon } from "./icons";
 import {
   connectNodes,
   getEditorUI,
@@ -75,8 +76,7 @@ function Widget() {
     });
   }
 
-  // TODO: Figure out a better name for this function
-  async function clone(widgetId: string) {
+  async function add(widgetId: string) {
     const widgetNode = figma.getNodeById(widgetId) as WidgetNode;
 
     // Clone the current widget
@@ -101,17 +101,19 @@ function Widget() {
         tooltip: "Run",
         propertyName: "run",
         itemType: "action",
+        icon: playIcon,
       },
       {
         tooltip: "Edit",
         propertyName: "edit",
         itemType: "action",
+        icon: codeIcon,
       },
       {
-        // TODO: Figure out a better name for this action
-        tooltip: "Clone",
-        propertyName: "clone",
+        tooltip: "Add",
+        propertyName: "add",
         itemType: "action",
+        icon: plusIcon,
       },
     ],
     ({ propertyName }) => {
@@ -129,8 +131,8 @@ function Widget() {
           waitForTask(run(code));
           return;
 
-        case "clone":
-          waitForTask(clone(widgetId));
+        case "add":
+          waitForTask(add(widgetId));
           return;
       }
     }
