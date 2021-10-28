@@ -14,7 +14,7 @@ Could be used for:
 - Technical interviews
 - ???
 
-Found a creative use for this widget? Let me about it on Twitter ([@colebemis](https://twitter.com/colebemis))
+Found a creative use for this widget? Tell me about it on Twitter ([@colebemis](https://twitter.com/colebemis))
 
 ## Installation
 
