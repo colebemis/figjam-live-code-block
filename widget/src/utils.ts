@@ -7,7 +7,7 @@ export function postMessage(message: EditorMessage) {
 export function getEditorUI() {
   const editorUrl =
     process.env.NODE_ENV === "production"
-      ? "https://figjam-javascript-repl.vercel.app/"
+      ? "https://figjam-live-code-block.vercel.app/"
       : "http://localhost:3000";
 
   return `<script>window.location.href = '${editorUrl}'</script>`;
