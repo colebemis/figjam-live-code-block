@@ -2,38 +2,25 @@
 
 Turn FigJam into a collaborative JavaScript canvas
 
-![cover](/assets/cover.png)
+![demo](https://user-images.githubusercontent.com/4608155/139183487-fe6882e3-d97b-46fb-935b-cd23ce74fb5c.gif)
 
 Could be used for:
 
-- Code review
+- Exploring APIs
 - Teaching
 - Debugging
 - Pair programming
+- Code review
 - Technical interviews
 - ???
+
+Found a creative use for this widget? Let me about it on Twitter ([@colebemis](https://twitter.com/colebemis))
 
 ## Installation
 
 _Coming soon to the Figma Community_
 
-## Usage
-
-_TODO_
-
-- insert
-- change expression\* (notice output changes as you edit)
-
-![CleanShot 2021-10-24 at 12 13 45](https://user-images.githubusercontent.com/4608155/138609195-af4849e4-e6f8-4a3d-bb50-99113962af80.gif)
-
-
-
-- run the code when the editor is closed using the run action
-- use the output of one block as an input to another block using connectors
-- autocomplete inputs in editor
-- create a new block that references that output value of the current block
-
-### Global variables
+## Global variables
 
 Every live code block has access to the following variables:
 
