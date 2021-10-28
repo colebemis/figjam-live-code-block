@@ -2,7 +2,7 @@
 
 Turn FigJam into a collaborative JavaScript canvas
 
-![demo](https://user-images.githubusercontent.com/4608155/139183487-fe6882e3-d97b-46fb-935b-cd23ce74fb5c.gif)
+![demo](assets/demo.gif)
 
 Could be used for:
 
