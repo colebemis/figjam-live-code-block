@@ -189,7 +189,7 @@ function Widget() {
         fill={colors.coolGray[900]}
       >
         <Text
-          fontFamily="JetBrains Mono"
+          fontFamily="Source Code Pro"
           fontSize={14}
           fill={colors.coolGray[400]}
         >
@@ -208,7 +208,7 @@ function Widget() {
           return line ? (
             <Text
               key={index}
-              fontFamily="JetBrains Mono"
+              fontFamily="Source Code Pro"
               fill={colors.coolGray[200]}
             >
               {line}
@@ -226,7 +226,7 @@ function Widget() {
         padding={16}
       >
         {error ? (
-          <Text fontFamily="JetBrains Mono" fill={colors.red[400]}>
+          <Text fontFamily="Source Code Pro" fill={colors.red[400]}>
             {error}
           </Text>
         ) : (
@@ -239,7 +239,7 @@ function Widget() {
           >
             {value.split("\n").length > 10 ? (
               <Text
-                fontFamily="JetBrains Mono"
+                fontFamily="Source Code Pro"
                 fontSize={14}
                 fill={colors.teal[400]}
                 textDecoration="underline"
@@ -262,7 +262,7 @@ function Widget() {
                   return line ? (
                     <Text
                       key={index}
-                      fontFamily="JetBrains Mono"
+                      fontFamily="Source Code Pro"
                       fill={colors.teal[400]}
                     >
                       {line}
@@ -271,7 +271,7 @@ function Widget() {
                 })}
               {!isExpanded && value.split("\n").length > 10 ? (
                 <Text
-                  fontFamily="JetBrains Mono"
+                  fontFamily="Source Code Pro"
                   fill={colors.teal[400]}
                   onClick={() => setIsExpanded(true)}
                 >
@@ -282,7 +282,7 @@ function Widget() {
           </AutoLayout>
         )}
         <Text
-          fontFamily="JetBrains Mono"
+          fontFamily="Source Code Pro"
           fontSize={14}
           fill={colors.coolGray[400]}
         >
