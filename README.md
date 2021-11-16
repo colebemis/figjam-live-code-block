@@ -18,7 +18,7 @@ Found a creative use for this widget? Tell me about it on Twitter ([@colebemis](
 
 ## Installation
 
-_Coming soon to the Figma Community_
+https://www.figma.com/community/widget/1034005547769330556
 
 ## Global variables
 
@@ -27,10 +27,10 @@ Every live code block has access to the following variables:
 | Name                   | Type       | Description                                                                                         |
 | ---------------------- | ---------- | --------------------------------------------------------------------------------------------------- |
 | `fetch()`              | `function` | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/fetch)                                  |
-| `fetchJson()`          | `function` |                                                                                                     |
-| ~~`Math`~~ _Planned_   | `object`   | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math)   |
-| ~~`Array`~~ _Planned_  | `object`   | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)  |
-| ~~`Object`~~ _Planned_ | `object`   | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) |
+| `fetchJson()`          | `function` | A convenient wrapper around `fetch()` specifically for fetching JSON data                           |
+| `Math`                 | `object`   | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math)   |
+| `Array`                | `object`   | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)  |
+| `Object`               | `object`   | [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) |
 
 ## Local development
 
